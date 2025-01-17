@@ -31,6 +31,10 @@ Blind face video restoration aims to restore high-fidelity details from videos s
 ### Demo Video
 https://youtu.be/fTtrLmOVq28
 
+
+https://github.com/user-attachments/assets/b6bc333f-bf08-4ecc-9f70-d3e8e82e111d
+
+
 -----------
 <span id='Usage'/>
 
