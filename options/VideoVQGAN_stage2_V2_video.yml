@@ -1,0 +1,179 @@
+# general settings
+name: VideoVQGAN_stage2_V2_Video_trainEnc
+model_type: VideoCodeFormerIdxModelV2
+num_gpu: 2
+manual_seed: 0
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: FFHQ
+    type: HQVideoDatasetImgSeqV2
+    image_dir: ../../datasets/FFHQ
+    use_image_prob: 0.2
+    video_dir: ../../datasets/VFHQ-All
+    frames_size: 8
+    stride: 1
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+    in_size: 512
+    gt_size: 512
+    mean: [0.5, 0.5, 0.5]
+    std: [0.5, 0.5, 0.5]
+    use_hflip: true
+    use_corrupt: true
+
+    # # large degradation in stageII
+    blur_kernel_size: 41
+    use_motion_kernel: false
+    motion_kernel_prob: 0.001
+    kernel_list: ['iso', 'aniso']
+    kernel_prob: [0.5, 0.5]
+    blur_sigma: [1, 15]
+    downsample_range: [4, 30]
+    noise_range: [0, 20]
+    jpeg_range: [30, 80]
+
+    scale_range: [0.7, 1.0]
+
+    # large degradation in stageII
+    # latent_gt_path: weights/vqgan/latent_gt_code1024.pth
+    # latent_gt_path: './experiments/pretrained_models/VQGAN/latent_gt_code1024.pth'
+
+    # data loader
+    num_worker_per_gpu: 8
+    batch_size_per_gpu: 4
+    dataset_enlarge_ratio: 100
+    prefetch_mode: cpu
+    num_prefetch_queue: 4
+
+  val:
+    name: FFHQ
+    type: HQVideoDatasetImgSeqV2
+    image_dir: inputs/mini-test
+    use_image_prob: 0.5
+    video_dir: inputs/test_videos
+    frames_size: 8
+    stride: 1
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+    in_size: 512
+    gt_size: 512
+    mean: [0.5, 0.5, 0.5]
+    std: [0.5, 0.5, 0.5]
+    use_hflip: true
+    use_corrupt: true
+
+    # # large degradation in stageII
+    blur_kernel_size: 41
+    use_motion_kernel: false
+    motion_kernel_prob: 0.001
+    kernel_list: ['iso', 'aniso']
+    kernel_prob: [0.5, 0.5]
+    blur_sigma: [10, 11]
+    downsample_range: [8, 9]
+    noise_range: [0, 20]
+    jpeg_range: [80, 81]
+
+    scale_range: [0.7, 1.0]
+
+    
+# network structures
+network_g:
+  type: VideoCodeFormerV2
+  dim_embd: 512
+  n_head: 8
+  n_layers: 9
+  codebook_size: 1024
+  connect_list: ['32', '64', '128', '256']
+  fix_modules: ['quantize', 'generator']
+  vqgan_path: "experiments/20241204_093947_VideoVQGAN_stage2_V2/models/net_g_160000.pth" # pretrained VQGAN
+  latent_size: 256
+  st_latent_size: 2048
+
+network_vqgan: # this config is needed if no pre-calculated latent
+  type: TemporalVQVAEV2
+  img_size: 512
+  nf: 64
+  ch_mult: [1, 2, 2, 4, 4, 8]
+  quantizer: 'nearest'
+  codebook_size: 1024
+  model_path: "experiments/20241130_164010_VideoVQGAN-stage1-V2/models/net_g_120000.pth" # pretrained VQGAN
+
+
+# path
+path:
+  pretrain_network_g: "experiments/20241209_124254_VideoVQGAN_stage2_V2_Video/models/net_g_155000.pth" # "experiments/20241209_124254_VideoVQGAN_stage2_V2_Video/models/net_g_155000.pth"
+  param_key_g: params_ema
+  strict_load_g: true
+  pretrain_network_d: ~
+  strict_load_d: true
+  resume_state: ~
+
+# base_lr(4.5e-6)*bach_size(4)
+train:
+  use_hq_feat_loss: true
+  feat_loss_weight: 1.0
+  cross_entropy_loss: true
+  entropy_loss_weight: 0.5
+  fidelity_weight: 0
+
+  optim_g:
+    type: Adam
+    lr: !!float 8e-5
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: MultiStepLR
+    milestones: [400000, 450000]
+    gamma: 0.5
+
+  # scheduler:
+  #   type: CosineAnnealingRestartLR
+  #   periods: [500000]
+  #   restart_weights: [1]
+  #   eta_min: !!float 2e-5 # no lr reduce in official vqgan code
+
+  total_iter: 500000
+
+  warmup_iter: -1  # no warm up
+  ema_decay: 0.995
+
+  use_adaptive_weight: true
+
+  net_g_start_iter: 0
+  net_d_iters: 1
+  net_d_start_iter: 0
+  manual_seed: 0
+
+# validation settings
+val:
+  val_freq: !!float 1000 # no validation
+  save_img: true
+
+  # metrics:
+  #   psnr: # metric name, can be arbitrary
+  #     type: calculate_psnr
+  #     crop_border: 4
+  #     test_y_channel: false
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: !!float 5000
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29412
+
+find_unused_parameters: True

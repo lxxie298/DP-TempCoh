@@ -1,0 +1,19 @@
+addict
+future
+lmdb
+numpy==1.26.4
+opencv-python
+Pillow
+pyyaml
+requests
+scikit-image
+scipy
+tb-nightly
+tqdm
+yapf
+lpips
+diffuser==0.27.2
+decord
+einops
+
+# python -m pip install tb-nightly -i https://mirrors.aliyun.com/pypi/simple
