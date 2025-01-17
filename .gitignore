@@ -5,15 +5,15 @@ version.py
 
 # ignored files with suffix
 *.html
-*.png
+#*.png
 *.jpeg
-*.jpg
+#*.jpg
 *.pt
-*.gif
+#*.gif
 *.pth
 *.dat
 *.zip
-*.mp4
+#*.mp4
 
 # template
 
