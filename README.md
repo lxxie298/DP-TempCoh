@@ -16,7 +16,7 @@ Lianxin Xie, Bingbing Zheng, Wen Xue, Yunfei Zhang, Le Jiang, Ruotao Xu, Si Wu, 
 
 -----
 ## 🎉 News 
-
+- [x] [2025.01.18] Release the checkpoint used in DP-TempCoh.
 - [x] [2025.01.16] 🚀🚀 Release the code of DP-TempCoh.
 
 -----------
@@ -54,6 +54,8 @@ conda install -c conda-forge ffmpeg
 ```
 
 ### 2. Inference</a>
+Download the checkpoint file from <a href="https://huggingface.co/xcc98/DP-TempCoh/tree/main">huggingface</a> and put it into directory [weights].
+
 ```
 python scripts/inference_v1.py --ckpt_path weights/net_g_v1.pth -i ./examples -o results/examples
 ```
