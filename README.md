@@ -11,7 +11,7 @@ Lianxin Xie, Bingbing Zheng, Wen Xue, Yunfei Zhang, Le Jiang, Ruotao Xu, Si Wu, 
 
 -----
 
-<a href=''><img src='https://img.shields.io/badge/Paper-PDF-orange'></a> 
+<a href='https://arxiv.org/abs/2501.09960'><img src='https://img.shields.io/badge/Paper-PDF-orange'></a> 
 [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/fTtrLmOVq28)
 
 -----
