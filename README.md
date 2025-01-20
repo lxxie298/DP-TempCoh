@@ -65,7 +65,15 @@ python scripts/inference_v1.py --ckpt_path weights/net_g_v1.pth -i ./examples -o
 If you find DP-TempCoh useful in your research or applications, please kindly cite:
 
 ```
-
+@misc{xie2025discretepriorbasedtemporalcoherentcontent,
+      title={Discrete Prior-based Temporal-coherent Content Prediction for Blind Face Video Restoration}, 
+      author={Lianxin Xie and Bingbing Zheng and Wen Xue and Yunfei Zhang and Le Jiang and Ruotao Xu and Si Wu and Hau-San Wong},
+      year={2025},
+      eprint={2501.09960},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2501.09960}, 
+}
 ```
 
 
